@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fruit_shop_app/models/cart_model.dart';
 import 'package:fruit_shop_app/widgets/item_tiles.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -48,13 +50,23 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.symmetric(horizontal: 25.0),
             child: Divider(),
           ),
-          GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2),
-            itemBuilder: (context, index) {
-              return ItemTiles();
-            },
-          ),
+          Expanded(child: Consumer<CartModel>(
+            builder: ((context, value, child) {
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: MediaQuery.of(context).size.width ~/ 200),
+                itemCount: value.items.length,
+                itemBuilder: (context, index) {
+                  return ItemTiles(
+                    itemName: value.items[index][0],
+                    itemPrice: value.items[index][1],
+                    imagePath: value.items[index][2],
+                    color: value.items[index][3],
+                  );
+                },
+              );
+            }),
+          )),
         ],
       )),
     );
